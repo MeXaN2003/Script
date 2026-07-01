@@ -4,13 +4,13 @@ set targetVSIN to 0.
 //настройки регуляторов
 
 
-set VSpid_KP to 10.
-set VSpid_KI to 0.
-set VSpid_KD to 0.
+set VSpid_KP to 2.
+set VSpid_KI to 0.5.
+set VSpid_KD to 0.2.
 set vsPID to pidLoop(VSpid_KP,VSpid_KI,VSpid_KD,-0.3, 0.3).
-set VSpid_KP_Step to 1.
-set VSpid_KI_Step to 1.
-set VSpid_KD_Step to 1.
+set VSpid_KP_Step to 0.2.
+set VSpid_KI_Step to 0.1.
+set VSpid_KD_Step to 0.1.
 //set pitchPID to pidLoop(1,0.1,0).
 
 //Глобальные переменные
@@ -32,7 +32,11 @@ function VSControl {
     set vsPID:kp to round(VSpid_KP/ship:airspeed, 6).
     set vsPID:ki to round(VSpid_KI/ship:airspeed, 6).
     set vsPID:kd to round(VSpid_Kd/ship:airspeed, 6).
+    print "KP: " + VSpid_KP + "  KI: " + VSpid_KI + "  KD: " + VSpid_KD.
     set pitchCmd to vsPID:update(dtPIDVS, VSfiltered).
+    if pitchCmd >= 0.3 {
+        vsPID:reset().
+    }
     print "VS = " + round(ship:verticalspeed,1) + " m/s".
     print "VSF = " + round(VSfiltered,1) + " m/s".
     set ship:control:pitch to pitchCmd.
@@ -65,7 +69,7 @@ function VSControl {
         set ag6 to false.
     }
     if ag7 {
-        set targetVSIN to 0.
+        set targetVSIN to -5.
         set ag7 to false.
     }
     if ag8 {
@@ -92,7 +96,6 @@ until phase = "DONE" {
             clearScreen.
             VSControl(targetVSIN).
             print (vsPID).
-            print ship:sensors:acc:mag / constant:g0.
         }
     }
     
