@@ -1,4 +1,4 @@
 clearScreen.
 switch to 0.
-run gforce.
+run fly5.
 clearScreen.
