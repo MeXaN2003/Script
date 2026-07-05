@@ -125,6 +125,7 @@ until phase = "DONE" {
                 print "AoA: " + round(currentAoA,2) + "°  target pitch: " + round(pitchDang,2) + "correction: " + round(correction,2).
             }
             lock steering to heading(90, pitchDang).
+            stage_check_throttle().
         } else if ship:altitude >= DangAlt{
             set phase to "GRAVITY_TURN_PHASE2".
         }
@@ -136,11 +137,11 @@ until phase = "DONE" {
             lock steering to heading(90, pitchDang).
             print "pitch:" + round(pitchDang,1) + "deg".
         } else {
-            stage. // сброс первой ступени и запуск второй
             set pitchTwo to minAngle*(1-(ship:apoapsis/targetApo))+5.
             lock steering to heading(90, pitchTwo).
             set phase to "COAST_TO_AP".
         }
+        stage_check_throttle().
     }
     else if phase = "COAST_TO_AP" {
         // Дожиг до целевого апоцентра
@@ -216,3 +217,4 @@ until phase = "DONE" {
     wait 0. // один кадр
 
 }
+run xtv7.

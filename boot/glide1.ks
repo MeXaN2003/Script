@@ -1,4 +1,4 @@
 clearScreen.
 switch to 0.
-run fly5.
+run XTV5.
 clearScreen.
