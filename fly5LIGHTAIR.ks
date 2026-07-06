@@ -55,7 +55,7 @@ set COURSEPID to pidLoop(COURSEpid_KP, COURSEpid_KI, COURSEpid_KD, -maxBankAngle
 set SPEEDpid_KP to 0.15.
 set SPEEDpid_KI to 0.01.
 set SPEEDpid_KD to 0.04.
-set SPEEDPID to pidLoop(SPEEDpid_KP, SPEEDpid_KI, SPEEDpid_KD, 0.3, 1).
+set SPEEDPID to pidLoop(SPEEDpid_KP, SPEEDpid_KI, SPEEDpid_KD, 0.15, 1).
 
 // Шаги для изменения коэффициентов через AG (1-6)
 //set SPEEDpid_KP_Step to 0.01.

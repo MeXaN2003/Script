@@ -27,7 +27,7 @@ set vsPID to pidLoop(VSpid_KP, VSpid_KI, VSpid_KD, -0.3, 0.3).
 
 // Коэффициент адаптации триммера (медленный интегратор для компенсации смещения)
 set trimPitchKP to 0.002.
-set yawRollKP to 3.
+set yawRollKP to 1.
 
 // Внешний PID по высоте (выдаёт целевое значение VS)
 // Выход ограничен [-10, 20] м/с — позволяет набирать высоту быстрее, чем снижаться.
@@ -201,8 +201,8 @@ function ROLLcontrol {
         set rollCmd to ROLLPID:update(missionTime, ROLLfiltered).
         
         set yawCMDroll to ship:angularVel:z*yawRollKP. //Важно, демпфер по рысканью.
-        if yawCMDroll > 0.3 {set yawCMDroll to 0.3.}
-        if yawCMDroll < -0.3 {set yawCMDroll to -0.3.}
+        if yawCMDroll > 0.3 {set yawCMDroll to 0.1.}
+        if yawCMDroll < -0.3 {set yawCMDroll to -0.1.}
 
         // Anti-windup
         if abs(rollCmd) >= 0.3 {
@@ -319,12 +319,12 @@ until phase = "DONE" {
             set ag6 to false.
         }
         if ag7 {
-            set yawRollKP to yawRollKP-1.
+            set yawRollKP to yawRollKP-0.1.
 
             set ag7 to false.
         }
         if ag8 {
-            set yawRollKP to yawRollKP+1.
+            set yawRollKP to yawRollKP+0.1.
             set ag8 to false.
         }
         if ag10 {
