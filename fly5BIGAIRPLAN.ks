@@ -3,14 +3,14 @@
 // ============================================================
 
 set targetVSIN to 0.          // Целевая вертикальная скорость (м/с) — задаётся внешним контуром высоты
-set targetAltitude to 3000.   // Целевая высота (м)
+set targetAltitude to 9000.   // Целевая высота (м)
 set targetROLLING to 0.       // Целевой угол крена (градусы) — задаётся внешним контуром курса
 set targetCourse to 90.       // Целевой курс (градусы, 0-360)
-set targetSPEED to 200.
+set targetSPEED to 300.
 set trimPitch to 0.           // Адаптивный триммер тангажа (компенсирует статическую ошибку)
 // ИМБА — действительно отличное решение!
 
-set Vstall to 90. //скорость сваливания, ниже нее не опускаться.
+set Vstall to 120. //скорость сваливания, ниже нее не опускаться.
 
 
 // ============================================================
@@ -27,7 +27,7 @@ set vsPID to pidLoop(VSpid_KP, VSpid_KI, VSpid_KD, -0.3, 0.3).
 
 // Коэффициент адаптации триммера (медленный интегратор для компенсации смещения)
 set trimPitchKP to 0.002.
-set yawRollKP to 1.
+set yawRollKP to 0.
 
 // Внешний PID по высоте (выдаёт целевое значение VS)
 // Выход ограничен [-10, 20] м/с — позволяет набирать высоту быстрее, чем снижаться.
@@ -55,7 +55,7 @@ set COURSEPID to pidLoop(COURSEpid_KP, COURSEpid_KI, COURSEpid_KD, -maxBankAngle
 set SPEEDpid_KP to 0.15.
 set SPEEDpid_KI to 0.01.
 set SPEEDpid_KD to 0.03.
-set SPEEDPID to pidLoop(SPEEDpid_KP, SPEEDpid_KI, SPEEDpid_KD, 0.3, 1).
+set SPEEDPID to pidLoop(SPEEDpid_KP, SPEEDpid_KI, SPEEDpid_KD, 0.05, 1).
 
 // Шаги для изменения коэффициентов через AG (1-6)
 //set SPEEDpid_KP_Step to 0.01.
@@ -124,8 +124,8 @@ function VSControl {
         local errorVS to targetVS - VSfiltered.
         set trimPitch to trimPitch + errorVS * trimPitchKP * dtPIDVS.
         // Ограничиваем триммер, чтобы не уйти в разнос
-        if trimPitch > 0.15 { set trimPitch to 0.15. }
-        if trimPitch < -0.15 { set trimPitch to -0.15. }
+        if trimPitch > 0.05 { set trimPitch to 0.05. }
+        if trimPitch < -0.05 { set trimPitch to -0.05. }
 
         // Адаптация коэффициентов: делим на воздушную скорость
         set vsPID:kp to round(VSpid_KP / ship:airspeed, 6).
